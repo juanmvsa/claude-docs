@@ -1,4 +1,6 @@
 
+---
+
 # Language Server Installation Log
 
 This document lists the commands used to install language servers for Haskell and JSON in the Helix editor configuration.
@@ -73,9 +75,40 @@ auto-format = true
 4. **Standard LSP Protocol**: Both use standard LSP communication (`--lsp` and `--stdio`)
 5. **File Type Coverage**: Covers common file extensions (`.hs`, `.lhs` for Haskell; `.json` for JSON)
 
+## Bash Language Server
+
+### Installation Command
+```bash
+npm install -g bash-language-server
+```
+
+### Why This Approach
+- **npm Global Install**: Used npm for global installation as this is the recommended method for bash-language-server
+- **Permission Success**: Unlike the earlier JSON LSP attempt, this succeeded because npm permissions were working correctly
+- **bash-language-server**: Official LSP for Bash that provides:
+  - Syntax checking and validation
+  - Code completion for commands and variables
+  - Documentation on hover
+  - Go-to-definition for functions
+  - Error diagnostics
+- **No Auto-format**: Set to `false` because bash scripts often have specific formatting requirements
+
+### Configuration Added to languages.toml
+```toml
+[language-server.bash-language-server]
+command = "bash-language-server"
+args = ["start"]
+
+[[language]]
+name = "bash"
+language-servers = ["bash-language-server"]
+file-types = ["sh", "bash"]
+auto-format = false
+```
+
 ## Installation Verification
 
-Both language servers are now available in the system PATH and will be automatically started by Helix when editing files of the corresponding types.
+All language servers are now available in the system PATH and will be automatically started by Helix when editing files of the corresponding types.
 
 ---
 
