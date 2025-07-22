@@ -1,3 +1,84 @@
+
+# Language Server Installation Log
+
+This document lists the commands used to install language servers for Haskell and JSON in the Helix editor configuration.
+
+## Haskell Language Server (HLS)
+
+### Installation Command
+```bash
+brew install haskell-language-server
+```
+
+### Why This Approach
+- **Homebrew**: Used Homebrew instead of other methods because it handles dependencies automatically
+- **haskell-language-server**: This is the official LSP for Haskell that provides:
+  - Type checking and inference
+  - Code completion
+  - Go-to-definition
+  - Refactoring support
+  - Error reporting
+- **Version**: Installed version 2.11.0.0_1 with support for GHC versions 9.8.4, 9.10.2, 9.12.2
+- **Configuration**: Uses `haskell-language-server-wrapper` command with `--lsp` argument for proper LSP communication
+
+### Configuration Added to languages.toml
+```toml
+[language-server.haskell-language-server]
+command = "haskell-language-server-wrapper"
+args = ["--lsp"]
+
+[[language]]
+name = "haskell"
+language-servers = ["haskell-language-server"]
+file-types = ["hs", "lhs"]
+auto-format = true
+```
+
+## JSON Language Server
+
+### Installation Command
+```bash
+brew install vscode-langservers-extracted
+```
+
+### Why This Approach
+- **First Attempt**: Tried `npm install -g vscode-langservers-extracted` but encountered permission issues
+- **Permission Error**: Got EACCES error trying to write to `/usr/local/lib/node_modules/`
+- **Homebrew Solution**: Switched to Homebrew which handles permissions properly and installs system-wide
+- **vscode-langservers-extracted**: This package contains multiple language servers extracted from VS Code:
+  - JSON Language Server
+  - HTML Language Server  
+  - CSS Language Server
+  - ESLint Language Server
+- **Version**: Installed version 4.10.0 with all dependencies handled automatically
+
+### Configuration Added to languages.toml
+```toml
+[language-server.vscode-json-language-server]
+command = "vscode-json-language-server"
+args = ["--stdio"]
+
+[[language]]
+name = "json"
+language-servers = ["vscode-json-language-server"]
+file-types = ["json"]
+auto-format = true
+```
+
+## Key Benefits
+
+1. **Homebrew Consistency**: Both installations use Homebrew, ensuring consistent dependency management
+2. **System Integration**: Properly installed at system level with correct permissions
+3. **Auto-formatting**: Both language servers configured with `auto-format = true` for better code quality
+4. **Standard LSP Protocol**: Both use standard LSP communication (`--lsp` and `--stdio`)
+5. **File Type Coverage**: Covers common file extensions (`.hs`, `.lhs` for Haskell; `.json` for JSON)
+
+## Installation Verification
+
+Both language servers are now available in the system PATH and will be automatically started by Helix when editing files of the corresponding types.
+
+---
+
 # Installed Language Servers for Helix
 
 This document lists all the Language Server Protocol (LSP) servers that have been installed and configured for use with Helix editor.
